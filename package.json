@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "cytoscape": "^3.19.0",
+    "cytoscape-cola": "^2.4.0",
+    "webcola": "^3.4.0"
+  }
+}

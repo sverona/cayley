@@ -1,0 +1,47 @@
+<script src="https://unpkg.com/d3@v6"></script>
+<script src="https://unpkg.com/d3-force@v2"></script>
+<script src="cayley.js"></script>
+<script>
+  // let graph = new CayleyGraph(["a", "x"], ["a^6", "x^2a^3", "x'axa"]);
+  // let graph = new CayleyGraph(["a", "b", "c", "d"], ["a^2", "b^2", "c^2", "d^2", "aba'b'", "aca'c'", "bcb'c'", "cdc'd'", "ada'd'", "bdb'd'"]);
+  // let graph = new CayleyGraph(["a", "b", "c"], ["a^3", "b^3", "c^3", "aba'b'", "aca'c'", "bcb'c'"]);
+  // let graph = new CayleyGraph(["a", "b", "c"], ["a^2", "b^2", "c^2", "(ab)^2", "(bc)^3", "(ac)^3"]);
+  // let graph = new CayleyGraph(["a", "b"], ["a^5", "b^4", "aba^-2b'"]);
+  let graph = new CayleyGraph(["a", "b"], ["a^3", "b^7", "aba'b'"])
+  graph.findCayleyGraph();
+
+  var force = d3.layout.force()
+                .nodes(graph.nodes)
+                .links(graph.edges)
+                .size([600, 600])
+                .start();
+
+  var svg = d3.select("body")
+              .append("svg")
+              .attr("width", 600)
+              .height("width", 600);
+
+  var edges = svg.selectAll("line")
+                 .data(graph.edges)
+                 .enter()
+                 .append("line")
+                 .style("stroke", "#ccc")
+                 .style("stroke-width", 2);
+
+  var nodes = svg.selectAll("circle")
+                 .data(graph.nodes)
+                 .enter()
+                 .append("circle")
+                 .attr("r", 6)
+                 .call(force.drag);
+
+  force.on("tick", () => {
+      edges.attr("x1", d => d.source.x)
+           .attr("y1", d => d.source.y)
+           .attr("x2", d => d.target.x)
+           .attr("y2", d => d.target.y);
+
+      nodes.attr("cx", d => d.x)
+           .attr("cy", d => d.y);
+  });
+</script>
